@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>chat</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <!--    스트리밍 강의 -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="/js/chat.js"></script>
+
+    <style>
+        /* Container */
+        .video-container {
+            display: flex;
+            align-items: center; /* 중앙 정렬 (수직) */
+        }
+
+        /* Video */
+        #video {
+            width: 500px;
+            margin-right: 20px; /* 오른쪽 여백 */
+        }
+
+        /* Another object (replace with your object style) */
+        /*.chat-object {*/
+        /*    !*width: 200px;*!*/
+        /*    !*height: 150px;*!*/
+        /*    !*background-color: lightgray; !* 예제용 배경색 *!*!*/
+        /*    text-align: center;*/
+        /*    line-height: 150px; !* 예제용 세로 중앙 정렬 *!*/
+        /*}*/
+        .chat-input-container {
+            display: flex;
+            align-items: center; /* 아이템들을 수직으로 중앙에 배치 */
+        }
+
+
+    </style>
+
+</head>
+<body>
+<h1>채팅</h1>
+<div class="video-container">
+    <!-- Video -->
+    <video id="video" controls></video>
+    <div id="userList">
+
+    </div>
+    <button id="disconnect" type="button" onclick="disconnect()">해제</button>
+    <!-- Another object (could be text, image, button, etc.) -->
+    <div class="chat-object">
+<!--        <form>-->
+<!--            <div>-->
+<!--                <label for="connect">웹소켓 연결:</label>-->
+<!--                <button id="connect" type="button" onclick="handleConnectClick()">연결</button>-->
+<!--                <button id="disconnect" type="button" disabled="disabled" onclick="disconnect()">해제</button>-->
+
+<!--            </div>-->
+<!--        </form>-->
+        <div id="conversation">
+            <div id="communicate">
+                <p id="message-list"></p>
+            </div>
+        </div>
+
+        <form>
+            <!-- 아래 div에 클래스를 추가함 -->
+            <div class="chat-input-container">
+                <input type="text" id="msg" placeholder="내용을 입력하세요....">
+                <button id="send" type="button" disabled onclick="sendMessage()">보내기</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+<script>
+    // HLS 파일 재생위한 js 스크립트
+    if(Hls.isSupported()) {
+        var video = document.getElementById('video');
+        var hls = new Hls();
+        hls.loadSource('https://xyckilfubmxa19292409.cdn.ntruss.com/live/video/ls-20230830145651-iGK9p/1080p-16-9/playlist.m3u8');
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            video.play();
+        });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        // HLS is natively supported on platforms like Apple devices.
+        video.src = 'https://xyckilfubmxa19292409.cdn.ntruss.com/live/video/ls-20230830145651-iGK9p/1080p-16-9/playlist.m3u8';
+        video.addEventListener('canplay', function() {
+            video.play();
+        });
+    }
+</script>
+
+
+</body>
+</html>
